@@ -8,9 +8,10 @@ author = Author.objects.get(name="J.K. Rowling")
 books_by_author = author.books.all()
 
 # All books in a library
-library = Library.objects.get(name="library_name")
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)
 books_in_library = library.books.all()
 
 # Librarian for a library
-library = Library.objects.get(name="library_name")
+library = Library.objects.get(name=library_name)
 librarian = library.librarian
