@@ -20,6 +20,6 @@ class list_books(DetailView):
     # context_object_name = 'book'
 
 class register(CreateView):
-    form_class = UserCreationForm
+    form_class =  # UserCreationForm()
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
