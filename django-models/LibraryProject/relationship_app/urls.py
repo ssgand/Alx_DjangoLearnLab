@@ -3,9 +3,9 @@ from .views import book_list
 from .views import list_books
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
-from .extra_views.admin_view import admin_view
-from .extra_views.librarian_view import librarian_view
-from .extra_views.member_view import member_view
+from .admin_view import admin_view
+from .librarian_view import librarian_view
+from .member_view import member_view
 from . import views
 
 
