@@ -1,0 +1,39 @@
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import UserManager
+
+# Create your models here.
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+    publication_year = models.IntegerField()
+
+class CustomUserManager(UserManager):
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        if not username:
+            raise ValueError('The Username field must be set')
+        # email = self.normalize_email(email)
+        # user = self.model(username=username, email=email, **extra_fields)
+        # user.set_password(password)
+        # user.save(using=self._db)
+
+        extra_fields.setdefault("date_of_birth", None)
+        extra_fields.setdefault("profile_picture", None)
+
+        user = super().create_user(username=username, email=email, password=password, **extra_fields)
+        return user
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("date_of_birth", None)
+        extra_fields.setdefault("profile_picture", None)
+
+        return super().create_superuser(username=username, email=email, password=password, **extra_fields)
+
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+
+    objects = CustomUserManager()
