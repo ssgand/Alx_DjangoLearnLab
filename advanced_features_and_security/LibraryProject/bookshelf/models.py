@@ -19,7 +19,7 @@ class CustomUserManager(UserManager):
         # user.save(using=self._db)
 
         extra_fields.setdefault("date_of_birth", None)
-        extra_fields.setdefault("profile_picture", None)
+        extra_fields.setdefault("profile_photo", None)
 
         user = super().create_user(username=username, email=email, password=password, **extra_fields)
         return user
@@ -28,12 +28,12 @@ class CustomUserManager(UserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault("date_of_birth", None)
-        extra_fields.setdefault("profile_picture", None)
+        extra_fields.setdefault("profile_photo", None)
 
         return super().create_superuser(username=username, email=email, password=password, **extra_fields)
 
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
 
     objects = CustomUserManager()
