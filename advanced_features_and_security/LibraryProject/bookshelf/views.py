@@ -15,7 +15,7 @@ def index(request):
 def book_list(request):
     books = Book.objects.all()
     context = {'books': books}
-    return render(request, 'relationship_app/list_books.html', context)
+    return render(request, 'bookshelf/book_list.html', context)
 
 @login_required
 @permission_required('bookshelf.can_add', raise_exception=True)
