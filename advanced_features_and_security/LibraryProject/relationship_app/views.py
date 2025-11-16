@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book
 from .models import Library
@@ -11,6 +12,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 from .forms import BookForm
+from bookshelf.forms import CustomUserCreationForm
+
+
+def index(request):
+    return HttpResponse("Welcome to my App.")
 
 # Create your views here.
 def book_list(request):
@@ -24,7 +30,7 @@ class list_books(DetailView):
     # context_object_name = 'book'
 
 class register(CreateView):
-    form_class = UserCreationForm                # UserCreationForm()
+    form_class = CustomUserCreationForm                # UserCreationForm()
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
 

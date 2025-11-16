@@ -8,29 +8,52 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
+    
+    class Meta:
+        permissions = (
+            ("can_view", 'Can view books'),
+            ("can_add", 'Can add a new book'),
+            ("can_delete", 'Can delete books'),
+            ("can_edit", 'Can edit books'),
+        )
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email=None, password=None, **extra_fields):
         if not username:
             raise ValueError('The Username field must be set')
-        # email = self.normalize_email(email)
-        # user = self.model(username=username, email=email, **extra_fields)
-        # user.set_password(password)
-        # user.save(using=self._db)
+        email = self.normalize_email(email)
 
         extra_fields.setdefault("date_of_birth", None)
         extra_fields.setdefault("profile_photo", None)
 
-        user = super().create_user(username=username, email=email, password=password, **extra_fields)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+
+        # user = super().create_user(username=username, email=email, password=password, **extra_fields)
+        # return user
         return user
 
     def create_superuser(self, username, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("date_of_birth", None)
         extra_fields.setdefault("profile_photo", None)
 
-        return super().create_superuser(username=username, email=email, password=password, **extra_fields)
+        # return super().create_superuser(username=username, email=email, password=password, **extra_fields)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        return self.create_user(
+            username=username,
+            email=email,
+            password=password,
+            **extra_fields
+        )
 
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
