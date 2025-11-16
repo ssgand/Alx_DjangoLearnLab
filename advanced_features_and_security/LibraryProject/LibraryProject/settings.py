@@ -132,15 +132,15 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 
 # XSS and content protections
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True # Enable browser XSS filtering
+SECURE_CONTENT_TYPE_NOSNIFF = True # Prevent MIME type sniffing
 X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking
 
-# Secure cookies
+# Secure cookies. Enforce HTTPS for all cookies
 CSRF_COOKIE_SECURE = True  # Only send CSRF cookies over HTTPS
 SESSION_COOKIE_SECURE = True  # Only send session cookies over HTTPS
 
-INSTALLED_APPS += ['csp']
+INSTALLED_APPS += ['csp'] # Add Content Security Policy app
 
 MIDDLEWARE += ['csp.middleware.CSPMiddleware']
 
@@ -149,3 +149,13 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'", "data:")
+
+# HTTPS settings
+SECURE_SSL_REDIRECT = True  # Set to True in production with HTTPS
+SECURE_HSTS_SECONDS = 31536000 # One year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True # Allow site to be included in browsers' HSTS preload list
+
+
+
+
