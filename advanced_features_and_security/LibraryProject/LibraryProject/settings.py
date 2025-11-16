@@ -150,11 +150,16 @@ CSP_SCRIPT_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'", "data:")
 
+# Proxy SSL header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # Use when behind a proxy that sets this header
+
 # HTTPS settings
 SECURE_SSL_REDIRECT = True  # Set to True in production with HTTPS
 SECURE_HSTS_SECONDS = 31536000 # One year in seconds
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True # Apply HSTS to all subdomains
 SECURE_HSTS_PRELOAD = True # Allow site to be included in browsers' HSTS preload list
+
+
 
 
 
