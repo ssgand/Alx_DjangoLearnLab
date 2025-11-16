@@ -29,7 +29,7 @@ def book_create(request):
             return redirect("book_list")
     else:
         form = ExampleForm()
-    return render(request, "bookshelf/book_form.html", {"form": form})
+    return render(request, "bookshelf/form_example.html", {"form": form})
 
 
 @login_required
@@ -40,7 +40,7 @@ def book_update(request, pk):
     if form.is_valid():
         form.save()
         return redirect("book_list")
-    return render(request, "bookshelf/book_form.html", {"form": form})
+    return render(request, "bookshelf/form_example.html", {"form": form})
 
 
 @login_required
