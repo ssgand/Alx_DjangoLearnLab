@@ -129,7 +129,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # default, can be overridden per-view
+        'rest_framework.permissions.IsAuthenticated',  # default, can be overridden per-view
     ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'api.permissions.IsAuthorOrReadOnly',
+    ],
+    
 }
 
