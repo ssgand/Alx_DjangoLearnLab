@@ -48,3 +48,20 @@ It uses Django’s built-in authentication and custom forms.
 ### 4. Logout
 
     Visit /logout/
+
+## Blog Post Features (CRUD)
+
+- Model: `blog.models.Post` (title, content, author, timestamps)
+- Create: /posts/new/ (login required)
+- Read (list): /posts/
+- Read (detail): /posts/<pk>/
+- Update: /posts/<pk>/edit/ (only author)
+- Delete: /posts/<pk>/delete/ (only author)
+
+Permissions:
+- Create: authenticated users only
+- Update/Delete: only the post author (enforced via UserPassesTestMixin)
+
+Notes:
+- Author is set automatically during post creation (form_valid).
+- PostListView is paginated (10 per page).
