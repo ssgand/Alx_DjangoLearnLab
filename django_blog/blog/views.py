@@ -5,10 +5,13 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import messages
 from .forms import RegisterForm, ProfileUpdateForm
 from.models import Post
+from .models import Comment
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .forms import PostForm
+from .forms import CommentForm
 
 
 # --- LOGIN VIEW ---
@@ -86,6 +89,11 @@ class PostDetailView(DetailView):
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
+
 # Create a new post — only for authenticated users
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
@@ -128,3 +136,60 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return post.author == self.request.user
+    
+
+# Create a comment on a post (POST only — displays form on post detail template)
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'  # used only if you want a standalone page
+
+    def form_valid(self, form):
+        post_pk = self.kwargs.get('post_pk')
+        post = get_object_or_404(Post, pk=post_pk)
+        form.instance.post = post
+        form.instance.author = self.request.user
+        response = super().form_valid(form)
+        messages.success(self.request, "Comment posted.")
+        # Redirect back to the post detail page
+        return redirect(post.get_absolute_url())
+    
+    def get_success_url(self):
+        return reverse("post-detail", kwargs={'pk': self.kwargs['post_pk']})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # optionally add post to template context
+        context['post'] = get_object_or_404(Post, pk=self.kwargs.get('post_pk'))
+        return context
+
+# Edit an existing comment — only the comment author
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Comment updated.")
+        return redirect(self.object.post.get_absolute_url())
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user
+
+# Delete a comment — only the comment author
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Comment deleted.")
+        return super().delete(request, *args, **kwargs)
+
+    def test_func(self):
+        comment = self.get_object()
+        return comment.author == self.request.user

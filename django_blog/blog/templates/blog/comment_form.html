@@ -1,0 +1,11 @@
+{% extends "blog/base.html" %}
+{% block title %}{% if object %}Edit Comment{% else %}New Comment{% endif %}{% endblock %}
+{% block content %}
+  <h1>{% if object %}Edit Comment{% else %}New Comment{% endif %}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if object %}Update{% else %}Post{% endif %}</button>
+  </form>
+  <p><a href="{{ object.post.get_absolute_url }}">Back to post</a></p>
+{% endblock %}
