@@ -155,7 +155,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return redirect(post.get_absolute_url())
     
     def get_success_url(self):
-        return reverse("post-detail", kwargs={'pk': self.kwargs['post_pk']})
+        return reverse("post-detail", kwargs={'pk': self.kwargs['post_id']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
