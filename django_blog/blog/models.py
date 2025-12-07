@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
+from taggit.managers import TaggableManager
+from django.shortcuts import render
 
 # Create your models here.
 
@@ -10,6 +12,7 @@ class Post(models.Model):
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    tags = TaggableManager(blank=True) 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -40,3 +43,20 @@ class Comment(models.Model):
 
     def get_delete_url(self):
         return reverse('comment-delete', kwargs={'pk': self.pk})
+    
+def search_posts(request):
+    q = request.GET.get("q", "")
+
+    results = Post.objects.filter(
+        Q(title__icontains=q) |
+        Q(content__icontains=q) |
+        Q(tags__name__icontains=q)
+    ).distinct()
+
+    return render(request, "search_results.html", {"results": results, "q": q})
+    
+def posts_by_tag(request, tag_name):
+    posts = Post.objects.filter(tags__name__in=[tag_name]).distinct()
+    return render(request, "posts_by_tag.html", {"posts": posts, "tag_name": tag_name})
+
+

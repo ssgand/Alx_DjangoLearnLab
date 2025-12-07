@@ -26,7 +26,7 @@ class ProfileUpdateForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Post title', 'required': True}),
             'content': forms.Textarea(attrs={'placeholder': 'Write your post here...', 'rows': 8}),

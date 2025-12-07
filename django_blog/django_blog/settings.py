@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'taggit',
     'blog.apps.BlogConfig',
     'rest_framework',
 ]
@@ -123,7 +124,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "STATIC",
+    BASE_DIR / "blog/static",
 ]
 
 # Default primary key field type
