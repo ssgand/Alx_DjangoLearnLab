@@ -13,7 +13,11 @@ from django.urls import reverse_lazy, reverse
 from .forms import PostForm
 from .forms import CommentForm
 from django.core.paginator import Paginator
-from .models import Post, Tag
+from .models import Post
+
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Post
 
 
 # --- LOGIN VIEW ---
@@ -201,10 +205,6 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def posts_by_tag(request, tag_name):
     posts = Post.objects.filter(tags__name__in=[tag_name]).distinct()
-
-    from django.db.models import Q
-from django.shortcuts import render
-from .models import Post
 
 def search_posts(request):
     query = request.GET.get("q")
