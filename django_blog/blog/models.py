@@ -36,7 +36,7 @@ class Comment(models.Model):
         return f'Comment by {self.author.username} on {self.post.title}'
 
     def get_edit_url(self):
-        return reverse('comment-edit', kwargs={'pk': self.pk})
+        return reverse('comment-update', kwargs={'pk': self.pk})
 
     def get_delete_url(self):
         return reverse('comment-delete', kwargs={'pk': self.pk})

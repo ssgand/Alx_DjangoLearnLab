@@ -145,7 +145,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     template_name = 'blog/comment_form.html'  # used only if you want a standalone page
 
     def form_valid(self, form):
-        post_pk = self.kwargs.get('post_pk')
+        post_pk = self.kwargs.get('pk')
         post = get_object_or_404(Post, pk=post_pk)
         form.instance.post = post
         form.instance.author = self.request.user
@@ -155,12 +155,12 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return redirect(post.get_absolute_url())
     
     def get_success_url(self):
-        return reverse("post-detail", kwargs={'pk': self.kwargs['post_id']})
+        return reverse("post-detail", kwargs={'pk': self.kwargs['pk']})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # optionally add post to template context
-        context['post'] = get_object_or_404(Post, pk=self.kwargs.get('post_pk'))
+        context['post'] = get_object_or_404(Post, pk=self.kwargs.get('pk'))
         return context
 
 # Edit an existing comment — only the comment author
@@ -173,6 +173,9 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         response = super().form_valid(form)
         messages.success(self.request, "Comment updated.")
         return redirect(self.object.post.get_absolute_url())
+    
+    def get_success_url(self):
+        return reverse("post-detail", kwargs={'pk': self.kwargs['pk']})
 
     def test_func(self):
         comment = self.get_object()
