@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Post
 from .models import Comment
+from taggit.forms import TagWidget
 
 
 # Registration Form with Email Field
@@ -30,6 +31,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Post title', 'required': True}),
             'content': forms.Textarea(attrs={'placeholder': 'Write your post here...', 'rows': 8}),
+            "tags": TagWidget(),
         }
 class CommentForm(forms.ModelForm):
     content = forms.CharField(
