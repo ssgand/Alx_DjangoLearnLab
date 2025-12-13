@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
             "email",
             "bio",
-            "profile_photo",
+            "profile_picture",
             "followers",
         ]
         read_only_fields = ["followers"] 
