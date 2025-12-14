@@ -23,4 +23,4 @@ class Notification(models.Model):
     target = GenericForeignKey("content_type", "object_id")
 
     is_read = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True) # timestamp
