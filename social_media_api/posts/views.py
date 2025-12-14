@@ -84,22 +84,20 @@ class LikePostView(generics.GenericAPIView):
     def post(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)
 
-        like, created = Like.objects.get_or_create(
-            user=request.user,
-            post=post
-        )
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        
 
         if not created:
             return Response({"detail": "Already liked"}, status=400)
 
         return Response({"detail": "Post liked"})
     
-    class UnlikePostView(generics.GenericAPIView):
-        permission_classes = [IsAuthenticated]
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
-        def post(self, request, pk):
-            post = generics.get_object_or_404(Post, pk=pk)
-            Like.objects.filter(user=request.user, post=post).delete()
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        Like.objects.filter(user=request.user, post=post).delete()
 
-            return Response({"detail": "Post unliked"})
+        return Response({"detail": "Post unliked"})
 
